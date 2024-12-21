@@ -1,0 +1,65 @@
+.result-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.result-container .left-box {
+    width: 50%;
+}
+
+.left-box .share-contain {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 30px;
+    gap: 20px;
+}
+
+.left-box .result-share p {
+    margin: 0;
+}
+
+.result-share .part-nominal {
+    display: flex;
+    justify-content: space-between;
+}
+
+.part-nominal p {
+    margin: 0;
+}
+
+
+.result-container .right-box {
+    width: 50%;
+}
+
+
+.result-container .asset-summary {
+    position: absolute;
+    display: flex;
+    top: 10px;
+    left: 690px;
+    margin-top: 18px;
+    gap: 20px;
+    font-size: 19px;
+    font-weight: bold;
+  }
+  
+  .asset-summary p {
+    margin: 0;
+  }
+  
+  .asset-summary div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  
+  .asset-summary .wealth-dept-nominal {
+    text-align: end;
+    margin-right: 10px;
+  }
+  
+  .asset-summary .heir-part-nominal {
+    text-align: end;
+  }

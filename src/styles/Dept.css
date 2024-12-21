@@ -1,0 +1,113 @@
+.dept-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 422px;
+    /* color: white; */
+}
+
+.dept-container .heir-list-number {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0;
+    margin: 0;
+    width: 50%;
+    /* height: 100%; */
+    gap: 2px;
+}
+
+.heir-list-number p {
+    /* position: absolute; */
+    margin: 0 87px 5px;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.heir-list-number label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    margin-left: 87px;
+    width: 460px;
+    font-weight: 500;
+}
+
+.heir-list-number label input {
+    width: 83px;
+    height: 35px;
+    /* margin-left: 20px; */
+    text-align: center;
+    font-size: 19px;
+    border: none;
+    border-radius: 10px;
+    background-color: #928a7f;
+}
+
+.heir-list-number label input:focus {
+    outline: none;
+}
+
+
+.dept-container .line {
+    position: absolute;
+    height: 90%;
+    top: 50%;
+    left: 47.5%;
+    transform: translate(-50%, -50%);
+}
+
+
+.dept-container .dept-will {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    width: 50%;
+    padding-left: 15px;
+    color: #efe8da;
+}
+
+.dept-will .dept-item {
+    height: fit-content;
+}
+
+.dept-will .dept-input {
+    margin: 5px 0;
+    border-radius: 10px;
+    width: 450px;
+    height: 50px;
+}
+
+.dept-input label {
+    width: 170px;
+    border-radius: 10px !important;
+    font-weight: initial;
+}
+
+.dept-input p {
+    margin: 15px -10px;
+    /* translate: (-50%, -50%); */
+}
+
+.dept-input input {
+    width: 100%;
+}
+
+/* .dept-will .dept-input {
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.dept-input label {
+    background-color: #928a7f;
+    height: 55px;
+    width: 100px;
+    border-radius: 20px;
+}
+
+.dept-input input {
+    width: 300px;
+}  */
