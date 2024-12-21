@@ -5,7 +5,7 @@ import Form from './pages/Form';
 
 export default function App() {
   return (
-      <Router basename="/">
+      <Router basename="/wariz">
           <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/form" element={<Form />} />
