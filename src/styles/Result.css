@@ -2,6 +2,7 @@
     display: flex;
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
 .result-container .left-box {
@@ -63,7 +64,7 @@
 .result-container .asset-summary {
     position: absolute;
     display: flex;
-    top: 10px;
+    top: -80px;
     left: 690px;
     margin-top: 18px;
     gap: 20px;
@@ -87,5 +88,25 @@
   }
   
   .asset-summary .heir-part-nominal {
+    display: flex;
+    flex-direction: column;
     text-align: end;
+  }
+
+  .heir-part-nominal .aul-asalmasalah {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+
+
+  .result-container .rod {
+    position: absolute;
+    bottom: -33px;
+    left: 50%;
+    transform: translateX(-50%)
+  }
+
+  .rod p {
+    margin: 0;
   }

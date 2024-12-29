@@ -64,7 +64,7 @@ function law(filteredAhliWaris) {
                 filteredAhliWaris.anakLakiLaki || filteredAhliWaris.anakPerempuan || areSiblingMoreThanOne(filteredAhliWaris)
                     ? "1/6" 
                     : (filteredAhliWaris.suami || filteredAhliWaris.istri) && filteredAhliWaris.bapak 
-                        ? "1/3 albaqi"
+                        ? "albaqi"
                         : "1/3"
             ),
             // hajib: [
@@ -107,8 +107,8 @@ function law(filteredAhliWaris) {
             number: filteredAhliWaris.suami || null,
             part: (
                 filteredAhliWaris.anakLakiLaki || filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuLakiLaki || filteredAhliWaris.cucuPerempuan
-                    ? "1/6" ////
-                    : "1/3"
+                    ? "1/4" ////
+                    : "1/2"
             )
         },
         istri: {

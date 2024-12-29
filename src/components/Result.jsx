@@ -7,13 +7,18 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
     const [shareList, setShareList] = useState([]) 
     const [shareResult, setShareResult] = useState([])
     const [asobahPortion, setAsobahPortion] = useState()
+    const [aulHappend, setAulHappend] = useState(0)
+    const [rodHappend, setRodHappend] = useState(0)
 
+    const [wealthPerShare, setWealthPerShare] = useState(0)
+    
     const sortedHeirShare = [
-        ...heirShare.filter(([key, item]) => !item.part.startsWith('A')),
+        ...heirShare.filter(([key, item]) => !item.part.startsWith('A') && !item.part.startsWith('albaqi')),
+        ...heirShare.filter(([key, item]) => item.part.startsWith('albaqi')),
         ...heirShare.filter(([key, item]) => item.part.startsWith('A'))
       ]
-    
-    const wealthPerShare = totalWealth / asalMasalah
+      
+    // let wealthPerShare = (totalWealth - totalDept) / asalMasalah
 
     function fpb(a, b) {
         while (b !== 0) {
@@ -72,6 +77,13 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
         setShareList(deciamlFraction)
     }, [])
 
+
+    useEffect(() => {
+        if (asalMasalah > 0) {
+            setWealthPerShare((totalWealth - totalDept) / asalMasalah)
+        }
+    }, [asalMasalah, totalWealth, totalDept])
+
     useEffect(() => {
         console.log("share list:" + shareList)
         console.log("share result:" + shareResult)
@@ -84,10 +96,18 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             if (share) {
                 remaining -= share
                 return share
+            } else if (String(value).includes("albaqi")) {
+                const albaqi = remaining / 3
+                remaining -= albaqi.toFixed(3)
+                return albaqi.toFixed(3)
             } else {
+                if (remaining <= 0) {
+                    remaining = 0
+                }
                 return remaining
             }
         })
+        console.log(wealthPerShare + "=" + totalWealth + " " + totalDept + " " + asalMasalah)
 
         const isAsobahBilghairExists = heirShare.some(([key, value]) => value.part.includes("bilghair"))
         if (isAsobahBilghairExists) {
@@ -100,15 +120,35 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
               
             setAsobahPortion(portion)
         }
-        
+
         setShareResult(results)
     }, [asalMasalah])
+
+    useEffect(() => {
+        const shareResultSum = shareResult.reduce((acc, curr) => acc + curr, 0)
+        if (shareResultSum > asalMasalah) {
+            setAulHappend(shareResultSum)
+            // console.log(wealthPerShare)
+            setWealthPerShare((totalWealth - totalDept) / shareResultSum)
+            // setAsalMasalah(shareResultSum)
+        } else if (asalMasalah > 1 && shareResultSum && asalMasalah > shareResultSum) {
+            setRodHappend(asalMasalah-shareResultSum)
+            console.log("shareResultSum:" + shareResultSum)
+            console.log("executed" + asalMasalah + " " + shareResultSum)
+            // console.log()
+            // else {
+            //     setRodHappend(0)
+            // }
+        } else {
+            setRodHappend(0)
+        }
+    }, [shareResult])
 
     return (
         
         <div className="result-container">
             <div className="asset-summary">
-                <div className="wealth-dept">
+                <div>
                     <p>Jumlah harta:</p>
                     <p>Tanggungan:</p>
                 </div>
@@ -116,17 +156,20 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                     <p>Rp. {totalWealth}</p>
                     <p>Rp. {totalDept}</p>
                 </div>
-                <div className="heir-part">
+                <div>
                     <p>Perbagian:</p>
                     <p>Bagian:</p>
                 </div>
                 <div className="heir-part-nominal">
-                    <p>Rp. {Math.floor((totalWealth - totalDept) / asalMasalah)}</p>
-                    <p>{asalMasalah}</p>
+                    <p>Rp. {Math.floor(wealthPerShare)}</p>
+                    <div className="aul-asalmasalah">
+                        { aulHappend ? <p>{aulHappend}</p> : null }
+                        { aulHappend ? <p>Aul</p> : null }
+                        <p>{asalMasalah}</p>
+                    </div>
                 </div>
             </div>
             
-
             <div className="left-box">
                 <div className="share-contain">
                     { sortedHeirShare.map(([key, value], index) => { 
@@ -134,7 +177,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                             <div className="result-share">
                                 <div className="part-nominal">
                                     <p>{fromCamelCase(key)}</p>
-                                    { typeof shareList[index] === 'string' ? <p>Asobah</p> : <p>Rp. {Math.floor(wealthPerShare * shareResult[index])}</p>}
+                                    { String(shareList[index]).includes("Asobah")  ? <p>Asobah</p> : <p>Rp. {Math.floor(wealthPerShare * shareResult[index])}</p>}
                                     
                                 </div>
                                 <p>{shareResult[index]} bagian</p>
@@ -143,9 +186,9 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                     })}
                 </div>
             </div>
+
             <div className="right-box">
                 <div className="line-boundary"></div>
-                
                 <div className="share-box">
                     { sortedHeirShare.map(([key, value], index) => {
                         if (shareList[index] === "Asobah bilghair") {
@@ -167,6 +210,14 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                     }
                 </div>
             </div>
+
+            { rodHappend ?
+                (
+                    <div className="rod">
+                        <p>Rod: {rodHappend} bagian</p>
+                    </div>
+                ) : null
+            } 
         </div>
     )
 }
