@@ -6,7 +6,7 @@ const secHeir = ["Saudara laki-laki sekandung", "Saudara laki-laki seibu", "Saud
 const secHeir2 = ["Saudara perempuan sekandung", "Saudara perempuan seibu", "Saudara perempuan sebapak", "Nenek dari jalur bapak", "", "Cucu perempuan"]
 
 // if starting, will not there disabled checkbox ~ homework
-function Heir({ ahliWaris, heirClicked, toDisabled, toCamelCase, fromCamel }) {
+function Heir({ ahliWaris, heirClicked, toCamelCase, fromCamel }) {
 
     const location = useLocation()
     const [genderInject] = useState(location.state?.selectedGender) 
@@ -27,9 +27,9 @@ function Heir({ ahliWaris, heirClicked, toDisabled, toCamelCase, fromCamel }) {
         })
     }
 
-    function isDisbaled(element) {
-        return toDisabled.includes(element)
-    }
+    // function isDisbaled(element) {
+    //     return toDisabled.includes(element)
+    // }
 
     // useEffect(() => {
     //     console.log(toDisabled)
@@ -44,7 +44,7 @@ function Heir({ ahliWaris, heirClicked, toDisabled, toCamelCase, fromCamel }) {
                 <div className="main-heir-input gender-input">
                     { mainHeir.map(element => (
                         <div key={element}>
-                            <input onClick={isDisbaled(element) ? null : heirClicked} type="checkbox" id={element} name="heir" value={element} />
+                            <input onClick={heirClicked} type="checkbox" id={element} name="heir" value={element} />
                             <label style={getLabelStyle(toCamelCase(element))} htmlFor={element} className='custom-label'></label> 
                             {element}
                         </div>))
@@ -58,8 +58,8 @@ function Heir({ ahliWaris, heirClicked, toDisabled, toCamelCase, fromCamel }) {
                 <div className="sec-heir-input gender-input">
                     { secHeir.map(element => (
                         <div key={element}>
-                            <input onClick={isDisbaled(element) ? null : heirClicked} type="checkbox" id={element} name="heir" value={element} />
-                            <label style={getLabelStyle(toCamelCase(element))} htmlFor={element} className={`custom-label ${isDisbaled(element) ? "disabled" : ""}`}></label> 
+                            <input onClick={heirClicked} type="checkbox" id={element} name="heir" value={element} />
+                            <label style={getLabelStyle(toCamelCase(element))} htmlFor={element} className="custom-label"></label> 
                             {element}
                         </div>))
                     }
@@ -68,8 +68,8 @@ function Heir({ ahliWaris, heirClicked, toDisabled, toCamelCase, fromCamel }) {
                 <div className="sec-heir-input2 gender-input">
                     { secHeir2.map(element => (
                         <div key={element}>
-                            <input onClick={isDisbaled(element) ? null : heirClicked} className={element === "" ? "hidden" : ""} type="checkbox" id={element} name="heir" value={element} />
-                            <label style={getLabelStyle(toCamelCase(element))} htmlFor={element} className={`custom-label ${element === "" ? "hidden" : ""} ${isDisbaled(element) ? "disabled" : ""}`}></label> 
+                            <input onClick={heirClicked} className={element === "" ? "hidden" : ""} type="checkbox" id={element} name="heir" value={element} />
+                            <label style={getLabelStyle(toCamelCase(element))} htmlFor={element} className={`custom-label ${element === "" ? "hidden" : ""}`}></label> 
                             {element}
                         </div>))
                     }

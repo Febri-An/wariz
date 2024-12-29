@@ -2,7 +2,7 @@ import React from "react";
 import image from '../assets/title.png'
 import '../styles/Title.css'
 
-function Title({ name, currentPage, handleClick, withInput=false, handleChange, totalWealth}) {
+function Title({ name, currentPage, handleClick, withInput=false, handleChange, totalWealth }) {
     const pages = [1, 2, 3, 4]
 
     return (

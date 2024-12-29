@@ -6,6 +6,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
     const [asalMasalah, setAsalMasalah] = useState(0)
     const [shareList, setShareList] = useState([]) 
     const [shareResult, setShareResult] = useState([])
+    const [asobahPortion, setAsobahPortion] = useState()
 
     const sortedHeirShare = [
         ...heirShare.filter(([key, item]) => !item.part.startsWith('A')),
@@ -31,26 +32,26 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
         return numbers.reduce((acc, num) => kpk(acc, num));
     }
 
-    function formatNumber(num) {
-        // Jika bilangan bulat, langsung return sebagai bilangan bulat
-        if (Number.isInteger(num)) {
-            return num.toString();
-        } else if (!num) {
-            return num
-        }
+    // function formatNumber(num) {
+    //     // Jika bilangan bulat, langsung return sebagai bilangan bulat
+    //     if (Number.isInteger(num)) {
+    //         return num.toString();
+    //     } else if (!num) {
+    //         return num
+    //     }
     
-        // Jika desimal tunggal, return dengan satu angka di belakang koma
-        if (num % 1 === 0.5) {
-            return num.toString();
-        }
+    //     // Jika desimal tunggal, return dengan satu angka di belakang koma
+    //     if (num % 1 === 0.5) {
+    //         return num.toString();
+    //     }
     
-        // Tangani angka desimal seperti 3.333... atau 6.666...
-        const rounded = Math.floor(num * 10) / 10; // Ambil 1 angka desimal
-        const base = rounded.toFixed(1).toString(); // Ubah menjadi string dengan 1 angka desimal
-        const repeatingPart = base.split('.')[1][0]; // Ambil angka pengulangan
+    //     // Tangani angka desimal seperti 3.333... atau 6.666...
+    //     const rounded = Math.floor(num * 10) / 10; // Ambil 1 angka desimal
+    //     const base = rounded.toFixed(1).toString(); // Ubah menjadi string dengan 1 angka desimal
+    //     const repeatingPart = base.split('.')[1][0]; // Ambil angka pengulangan
     
-        return `${base.split('.')[0]}.${repeatingPart}${repeatingPart}${repeatingPart}...`;
-    }
+    //     return `${base.split('.')[0]}.${repeatingPart}${repeatingPart}${repeatingPart}...`;
+    // }
 
     useEffect(() => {
         const denominator = sortedHeirShare.map(([key, value]) => value.part)
@@ -65,11 +66,16 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             }
         })
 
-        // console.log("heir share:",heirShare)
+        console.log("heir share:", heirShare)
         // console.log("denominator length:", deciamlFraction.length)
         setAsalMasalah(denominator.length === 0 ? 1 : kpkMultiple(denominator))
         setShareList(deciamlFraction)
     }, [])
+
+    useEffect(() => {
+        console.log("share list:" + shareList)
+        console.log("share result:" + shareResult)
+    }, [shareList, shareResult])
 
     useEffect(() => {
         let remaining = asalMasalah
@@ -83,8 +89,19 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             }
         })
 
+        const isAsobahBilghairExists = heirShare.some(([key, value]) => value.part.includes("bilghair"))
+        if (isAsobahBilghairExists) {
+            const portion = heirShare.reduce((total, [key, { number, part }]) => {
+                if (part === "Asobah bilghair") {
+                  return total + (key.includes("LakiLaki") ? number * 2 : number);
+                }
+                return total;
+              }, 0);
+              
+            setAsobahPortion(portion)
+        }
+        
         setShareResult(results)
-        console.log('heir share:', heirShare)
     }, [asalMasalah])
 
     return (
@@ -104,7 +121,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                     <p>Bagian:</p>
                 </div>
                 <div className="heir-part-nominal">
-                    <p>Rp. {((totalWealth - totalDept) / asalMasalah)}</p>
+                    <p>Rp. {Math.floor((totalWealth - totalDept) / asalMasalah)}</p>
                     <p>{asalMasalah}</p>
                 </div>
             </div>
@@ -112,12 +129,13 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
 
             <div className="left-box">
                 <div className="share-contain">
-                    {sortedHeirShare.map(([key, value], index) => { 
+                    { sortedHeirShare.map(([key, value], index) => { 
                         return (
                             <div className="result-share">
                                 <div className="part-nominal">
                                     <p>{fromCamelCase(key)}</p>
-                                    <p>Rp. {formatNumber(wealthPerShare * shareResult[index])}</p>
+                                    { typeof shareList[index] === 'string' ? <p>Asobah</p> : <p>Rp. {Math.floor(wealthPerShare * shareResult[index])}</p>}
+                                    
                                 </div>
                                 <p>{shareResult[index]} bagian</p>
                             </div>
@@ -126,6 +144,28 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                 </div>
             </div>
             <div className="right-box">
+                <div className="line-boundary"></div>
+                
+                <div className="share-box">
+                    { sortedHeirShare.map(([key, value], index) => {
+                        if (shareList[index] === "Asobah bilghair") {
+                            return (
+                                <div className="share-division">
+                                    <p>{shareResult[index]}/{asobahPortion} x {key.includes("LakiLaki") ? value.number*2 : value.number} x {Math.floor(wealthPerShare)}</p>
+                                    <p>Rp. {Math.floor(shareResult[index] / asobahPortion * (key.includes("LakiLaki") ? value.number*2 : value.number) * wealthPerShare)}</p>
+                                </div>
+                            )
+                        }
+
+                        return (
+                            <div className="share-division">
+                                <p>{value.number}</p>
+                                <p>Rp. {Math.floor((wealthPerShare * shareResult[index]) / value.number)}</p>
+                            </div>
+                        )
+                        })
+                    }
+                </div>
             </div>
         </div>
     )

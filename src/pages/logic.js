@@ -53,7 +53,7 @@ function law(filteredAhliWaris) {
         bapak: {
             number: filteredAhliWaris.bapak || null,
             part: (
-                filteredAhliWaris.anakLakiLaki 
+                filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki
                     ? "1/6" 
                     : "Asobah binafsi"
             ) 
@@ -143,16 +143,14 @@ function law(filteredAhliWaris) {
                 filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki || filteredAhliWaris.bapak || filteredAhliWaris.saudaraLakiLakiSekandung
                 ? null
                 : filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuPerempuan 
-                    ? (filteredAhliWaris.saudaraPerempuanSekandung 
+                    ? filteredAhliWaris.saudaraPerempuanSekandung 
                         ? null 
-                        : "Asobah binafsi") 
-                    : !filteredAhliWaris.saudaraPerempuanSekandung > 1 
-                        ? "Asobah binafsi" 
-                        : filteredAhliWaris.saudaraPerempuanSekandung 
-                            ? "Asobah binafsi" 
-                            : filteredAhliWaris.saudaraPerempuanSekandung > 1 
-                                ? "Asobah binafsi"
-                                : undefined
+                        : filteredAhliWaris.saudaraPerempuanSebapak
+                            ? "Asobah bilgahir"
+                            : "Asobah binafsi"
+                    : filteredAhliWaris.saudaraPerempuanSebapak
+                            ? "Asobah bilghair" 
+                            : "Asobah binafsi"
                 )
         }, 
         saudaraLakiLakiSeibu: {
@@ -192,25 +190,34 @@ function law(filteredAhliWaris) {
                 ? null
                 : filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuPerempuan
                     ? filteredAhliWaris.saudaraPerempuanSekandung
-                    ? null
+                        ? null
+                        : filteredAhliWaris.saudaraLakiLakiSebapak
+                            ? "Asobah bilghair"
+                            : "Asobah maalghair"
                     : filteredAhliWaris.saudaraLakiLakiSebapak
                         ? "Asobah bilghair"
-                        : "Asobah maalghair"
-                    : !filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak
-                    ? "Asobah bilghair"
-                    : !filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraPerempuanSebapak > 1
-                        ? "2/3"
-                        : !filteredAhliWaris.saudaraPerempuanSekandung > 1
-                        ? "1/2"
-                        : filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak
-                            ? "Asobah bilghair"
-                            : filteredAhliWaris.saudaraPerempuanSekandung > 1
+                        : filteredAhliWaris.saudaraPerempuanSekandung > 1
                             ? null
-                            : filteredAhliWaris.saudaraPerempuanSekandung && filteredAhliWaris.saudaraLakiLakiSebapak
-                                ? "Asobah bilghair"
-                                : filteredAhliWaris.saudaraPerempuanSekandung
+                            : filteredAhliWaris.saudaraPerempuanSebapak
                                 ? "1/6"
-                                : undefined
+                                : !filteredAhliWaris.saudaraPerempuanSekandung && filteredAhliWaris.saudaraPerempuanSebapak > 1
+                                    ? "2/3"
+                                    : "1/2"
+                    // : !filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak
+                    //     ? "Asobah bilghair"
+                    //     : !filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraPerempuanSebapak > 1
+                    //         ? "2/3"
+                    //         : !filteredAhliWaris.saudaraPerempuanSekandung > 1
+                    //             ? "1/2"
+                    //             : filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak
+                    //                 ? "Asobah bilghair"
+                    //                 : filteredAhliWaris.saudaraPerempuanSekandung
+                    //                     ? null
+                    //                     : filteredAhliWaris.saudaraPerempuanSekandung && filteredAhliWaris.saudaraLakiLakiSebapak
+                    //                         ? "Asobah bilghair"
+                    //                         : filteredAhliWaris.saudaraPerempuanSekandung
+                    //                             ? "1/6"
+                    //                             : undefined
             )
 
             // part: (() => {
@@ -254,11 +261,9 @@ function law(filteredAhliWaris) {
         cucuLakiLaki: {
             number: filteredAhliWaris.cucuLakiLaki || null,
             part: (
-                filteredAhliWaris.anakLakiLaki && filteredAhliWaris.anakPerempuan
-                    ? null
-                    : filteredAhliWaris.anakLakiLaki
+                    filteredAhliWaris.anakLakiLaki
                         ? null
-                        : filteredAhliWaris.anakPerempuan
+                        : filteredAhliWaris.anakPerempuan && filteredAhliWaris.cucuPerempuan
                             ? "Asobah bilghair"
                             : "Asobah binafsi"
             )
@@ -266,15 +271,19 @@ function law(filteredAhliWaris) {
         cucuPerempuan: {
             number: filteredAhliWaris.cucuPerempuan || null,
             part: (
-                filteredAhliWaris.anakLakiLaki && filteredAhliWaris.anakPerempuan
-                    ? null
-                    : filteredAhliWaris.anakLakiLaki
+                    filteredAhliWaris.anakLakiLaki
                         ? null
-                        : filteredAhliWaris.anakPerempuan > 1
-                            ? null
-                            : filteredAhliWaris.anakPerempuan
-                                ? "1/6"
-                                : "1/2"
+                        : filteredAhliWaris.anakPerempuan > 1 && filteredAhliWaris.cucuLakiLaki
+                            ? "Asobah bilghair"
+                            : filteredAhliWaris.anakPerempuan > 1
+                                ? null
+                                : filteredAhliWaris.anakPerempuan && filteredAhliWaris.cucuLakiLaki
+                                    ? "Asobah bilghair"
+                                    : filteredAhliWaris.cucuLakiLaki
+                                        ? "Asobah bilghair"
+                                        : filteredAhliWaris.cucuPerempuan > 1
+                                            ? "2/3"
+                                            : "1/2"
             )
         },
         kakekDariJalurBapak: {

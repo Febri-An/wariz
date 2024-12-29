@@ -21,7 +21,6 @@ function Form() {
     const [ahliWaris, setAhliWaris] = useState({
         bapak: 0, ibu: 0, anakPerempuan: 0, anakLakiLaki: 0,  suami: 0, istri: 0, cucuLakiLaki: 0, cucuPerempuan: 0, saudaraLakiLakiSekandung: 0, saudaraLakiLakiSeibu: 0, saudaraLakiLakiSebapak: 0, saudaraPerempuanSekandung: 0, saudaraPerempuanSeibu: 0,  saudaraPerempuanSebapak: 0, kakekDariJalurBapak: 0, nenekDariJalurBapak: 0, nenekDariJalurIbu: 0
     })
-    const [toDisabled, setToDisabled] = useState([]) // will contain: [] -> general str 
     const [heirShare, setHeirShare] = useState([]) // will contain: [name {number: , part: }]
 
     const navigate = useNavigate();
@@ -30,9 +29,9 @@ function Form() {
 
     // page init
     const pages = [
-        { id: 1, title: 'Harta yang diwaris', component: <Heir ahliWaris={ahliWaris} heirClicked={heirClicked} toDisabled={toDisabled} toCamelCase={toCamelCase}  fromCamelCase={fromCamelCase}/>, withInput: true },
+        { id: 1, title: 'Harta yang diwaris', component: <Heir ahliWaris={ahliWaris} heirClicked={heirClicked} toCamelCase={toCamelCase}  fromCamelCase={fromCamelCase}/>, withInput: true },
         { id: 2, title: 'Hutang dan wasiat', component: <Dept ahliWaris={ahliWaris} setAhliWaris={setAhliWaris} setTotalDept={setTotalDept}/> },
-        { id: 3, title: 'Hasil pembagian', component: <Result heirShare={heirShare} totalWealth={totalWealth} totalDept={totalDept} fromCamelCase={fromCamelCase}/> },
+        { id: 3, title: 'Hasil pembagian', component: <Result ahliWaris={ahliWaris} heirShare={heirShare} totalWealth={totalWealth} totalDept={totalDept} fromCamelCase={fromCamelCase}/> },
         { id: 4, title: 'Pusat bantuan', component: <Help /> },
     ]
     const currentConfig = pages.find(page => page.id === currentPage)
@@ -97,23 +96,17 @@ function Form() {
         })
     }
 
-    useEffect(() => {   
-        const allValuesAreZero = Object.values(ahliWaris).every(value => value === 0);
-        // console.log("all value is 0:", allValuesAreZero)
-        if (allValuesAreZero) {
-            setToDisabled([])
-        } else {
+    useEffect(() => {
             const result = logic(ahliWaris)
-            const heirToDisabled = Object.entries(result) // return [] -> general str
-                .filter(([key, value]) => (!value.number && !value.part))
-                .map(([key]) => fromCamelCase(key))
+            // const heirToDisabled = Object.entries(result) // return [] -> general str
+            //     .filter(([key, value]) => (!value.number && !value.part))
+            //     .map(([key]) => fromCamelCase(key))
 
             const heirWhoGetShare = Object.entries(result)
                 .filter(([key, value]) => (value.number && value.part)) 
-
-            setToDisabled(heirToDisabled)             
+     
             setHeirShare(heirWhoGetShare)
-        }
+            console.log(result)
 
         console.log(ahliWaris)
     }, [ahliWaris])

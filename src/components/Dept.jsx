@@ -53,7 +53,7 @@ function Dept({ ahliWaris, setAhliWaris, setTotalDept }) {
         <div className="dept-container">
 
             <div className="heir-list-number">
-                {/* <p>Jumlah ahli waris:</p> */}
+                <p>Jumlah ahli waris:</p>
                 { filteredAhliWaris.map(heir => (
                     <label htmlFor={heir}>
                         {fromCamelCase(heir)}

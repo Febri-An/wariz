@@ -30,7 +30,33 @@
 
 
 .result-container .right-box {
+  display: flex;
     width: 50%;
+}
+
+.right-box .line-boundary {
+  align-self: center;
+  width: 2px;
+  height: 90%;
+  background-color: white;
+}
+
+.right-box .share-box {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 10px;
+  height: fit-content;
+  gap: 43px;
+} 
+
+.share-box .share-division {
+  display: flex;
+  width: 100%;
+  gap: 50px;
+}
+
+.share-division p {
+  margin: 0;
 }
 
 
