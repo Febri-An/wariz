@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/wariz/static/css/main.050c64d5.css",
-    "main.js": "/wariz/static/js/main.abb46a50.js",
+    "main.css": "/wariz/static/css/main.e2fc4df3.css",
+    "main.js": "/wariz/static/js/main.0bee7f18.js",
     "static/js/453.f64ce837.chunk.js": "/wariz/static/js/453.f64ce837.chunk.js",
     "static/media/background2.png": "/wariz/static/media/background2.4131da26e20487240796.png",
     "static/media/background1.png": "/wariz/static/media/background1.dbcb7390f934b9f89890.png",
@@ -11,12 +11,12 @@
     "static/media/title.png": "/wariz/static/media/title.35756e042b56f94f9264.png",
     "static/media/beauti-line.png": "/wariz/static/media/beauti-line.5ad45f57bcf1ab8b0ce6.png",
     "index.html": "/wariz/index.html",
-    "main.050c64d5.css.map": "/wariz/static/css/main.050c64d5.css.map",
-    "main.abb46a50.js.map": "/wariz/static/js/main.abb46a50.js.map",
+    "main.e2fc4df3.css.map": "/wariz/static/css/main.e2fc4df3.css.map",
+    "main.0bee7f18.js.map": "/wariz/static/js/main.0bee7f18.js.map",
     "453.f64ce837.chunk.js.map": "/wariz/static/js/453.f64ce837.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.050c64d5.css",
-    "static/js/main.abb46a50.js"
+    "static/css/main.e2fc4df3.css",
+    "static/js/main.0bee7f18.js"
   ]
 }
