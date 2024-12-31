@@ -32,7 +32,7 @@ function law(filteredAhliWaris) {
         return mainHeir.some(key => data[key]);
     }
 
-    function areTherezawilFurudh(data) {
+    function areThereDzawilFurudh(data) {
         const dzawilFurudh = [
             "anakPerempuan",
             "cucuPerempuan",
@@ -124,17 +124,9 @@ function law(filteredAhliWaris) {
             part: (
                 filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki || filteredAhliWaris.bapak
                 ? null
-                : (filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuPerempuan) && filteredAhliWaris.saudaraPerempuanSekandung
+                : filteredAhliWaris.saudaraPerempuanSekandung
                     ? "Asobah bilghair"
-                    : filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuPerempuan
-                        ? "Asobah binafsi"
-                        : (!filteredAhliWaris.anakPerempuan || !filteredAhliWaris.cucuPerempuan) && filteredAhliWaris.saudaraPerempuanSekandung
-                            ? "Asobah bilghair"
-                            : !filteredAhliWaris.anakPerempuan || !filteredAhliWaris.cucuPerempuan
-                                ? "Asobah binafsi"
-                                : filteredAhliWaris.suami || filteredAhliWaris.ibu || filteredAhliWaris.saudaraPerempuanSeibu
-                                    ? "Musytarikah"
-                                    : null 
+                    : "Asobah binafsi"
             )
         },
         saudaraLakiLakiSebapak: {
@@ -158,7 +150,9 @@ function law(filteredAhliWaris) {
             part: (
                 areThereMainHeir(filteredAhliWaris)
                     ? null
-                    : "1/3"
+                    : filteredAhliWaris.saudaraPerempuanSeibu
+                        ? "1/3"
+                        : "1/6"
             )
         }, 
         saudaraPerempuanSekandung: { ///
@@ -169,19 +163,11 @@ function law(filteredAhliWaris) {
                     ? "Asobah bilghair"
                     : filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuPerempuan
                         ? "Asobah maalghair"
-                        : (!filteredAhliWaris.anakPerempuan || !filteredAhliWaris.cucuPerempuan) && filteredAhliWaris.saudaraLakiLakiSekandung
+                        : filteredAhliWaris.saudaraLakiLakiSekandung 
                             ? "Asobah bilghair"
-                            : (!filteredAhliWaris.anakPerempuan || !filteredAhliWaris.cucuPerempuan) && filteredAhliWaris.saudaraPerempuanSekandung > 1
+                            : filteredAhliWaris.saudaraPerempuanSekandung > 1
                                 ? "2/3"
-                                : !filteredAhliWaris.anakPerempuan || !filteredAhliWaris.cucuPerempuan
-                                    ? "1/2"
-                                    : (filteredAhliWaris.suami || filteredAhliWaris.ibu || filteredAhliWaris.saudaraPerempuanSeibu) && filteredAhliWaris.saudaraLakiLakiSekandung
-                                        ? "Musytarikah"
-                                        : (filteredAhliWaris.suami || filteredAhliWaris.ibu || filteredAhliWaris.saudaraPerempuanSeibu) && filteredAhliWaris.saudaraPerempuanSekandung > 1
-                                            ? "2/3" 
-                                            : filteredAhliWaris.suami || filteredAhliWaris.ibu || filteredAhliWaris.saudaraPerempuanSeibu
-                                                ? "1/2" 
-                                                : null
+                                : "1/2"
         }, 
         saudaraPerempuanSebapak: {
             number: filteredAhliWaris.saudaraPerempuanSebapak || null,
@@ -255,7 +241,9 @@ function law(filteredAhliWaris) {
             part: (
                 areThereMainHeir(filteredAhliWaris)
                     ? null
-                    : "1/3"
+                    : filteredAhliWaris.saudaraLakiLakiSeibu
+                        ? "1/3"
+                        : "1/6"
             )
         },  
         cucuLakiLaki: {
@@ -291,7 +279,7 @@ function law(filteredAhliWaris) {
             part: (
                 filteredAhliWaris.bapak
                     ? null
-                    : areTherezawilFurudh(filteredAhliWaris)
+                    : areThereDzawilFurudh(filteredAhliWaris)
                         ? "1/6"
                         : undefined ///
             )
