@@ -14,7 +14,8 @@ function law(filteredAhliWaris) {
         ];
 
         // Periksa apakah ada saudara dengan jumlah lebih dari 1
-        return siblingKeys.some(key => data[key] > 1);
+        const count = siblingKeys.reduce((acc, key) => acc + data[key], 0);
+        return count > 1;
     }
 
     function areThereMainHeir(data) {
