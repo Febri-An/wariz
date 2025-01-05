@@ -33,28 +33,55 @@ function law(filteredAhliWaris) {
         return mainHeir.some(key => data[key]);
     }
 
-    function areThereDzawilFurudh(data) {
-        const dzawilFurudh = [
-            "anakPerempuan",
-            "cucuPerempuan",
-            "ibu",
-            "saudaraLakiLakiSeibu",
+    function areThereSaudaraSekandungOrSebapak(data) {
+        const sekandungSebapak = [
+            "saudaraLakiLakiSekandung",
+            "saudaraLakiLakiSebapak",
             "saudaraPerempuanSekandung",
-            "saudaraPerempuanSebapak",
-            "saudaraPerempuanSeibu",
-            "nenekDariJalurIbu",
-            "nenekDariJalurBapak"
+            "saudaraPerempuanSebapak"
         ]
 
-        // Periksa apakah ada dzawil furudh
-        return dzawilFurudh.some(key => data[key]);
+        // Periksa apakah ada saudara sekandung atau sebapak
+        return sekandungSebapak.some(key => data[key]);
+    }
+
+    function arePortionSaudaraSekandungAndSebapakMoreThanThree(data) {
+        const saudaraLakiLaki = [
+            "saudaraLakiLakiSekandung",
+            "saudaraLakiLakiSebapak",
+        ]
+        
+        const saudaraPerempuan = [
+            "saudaraPerempuanSekandung",
+            "saudaraPerempuanSebapak"
+        ]
+
+        // Periksa apakah ada saudara dengan jumlah lebih dari 1
+        const portionLakiLaki = saudaraLakiLaki.reduce((acc, key) => acc + data[key], 0);
+        const portionPerempuan = saudaraPerempuan.reduce((acc, key) => acc + data[key], 0);
+        const result = (portionLakiLaki*2) + portionPerempuan
+        return result >= 3;
+    }
+
+    function areThereHeirExceptSaudaraSekandungOrSebapak(data) {
+        const heirArray = [
+            "ibu",
+            "anakPerempuan",
+            "anakLakiLaki",
+            "suami",
+            "istri",
+            "cucuLakiLaki",
+            "cucuPerempuan"
+        ]
+
+        return heirArray.some(key => data[key])
     }
 
     const result = {
         bapak: {
             number: filteredAhliWaris.bapak || null,
             part: (
-                filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki
+                filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki 
                     ? "1/6" 
                     : "Asobah binafsi"
             ) 
@@ -95,9 +122,7 @@ function law(filteredAhliWaris) {
             part: (
                 filteredAhliWaris.anakPerempuan 
                     ? "Asobah bilghair" 
-                    : filteredAhliWaris.anakLakiLaki > 1
-                        ? "Asobah bilghair"
-                        : "Asobah binafsi"
+                    : "Asobah binafsi"
             ),
             // hajib: [
             //     "cucuLakiLaki",
@@ -190,52 +215,7 @@ function law(filteredAhliWaris) {
                                 : !filteredAhliWaris.saudaraPerempuanSekandung && filteredAhliWaris.saudaraPerempuanSebapak > 1
                                     ? "2/3"
                                     : "1/2"
-                    // : !filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak
-                    //     ? "Asobah bilghair"
-                    //     : !filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraPerempuanSebapak > 1
-                    //         ? "2/3"
-                    //         : !filteredAhliWaris.saudaraPerempuanSekandung > 1
-                    //             ? "1/2"
-                    //             : filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak
-                    //                 ? "Asobah bilghair"
-                    //                 : filteredAhliWaris.saudaraPerempuanSekandung
-                    //                     ? null
-                    //                     : filteredAhliWaris.saudaraPerempuanSekandung && filteredAhliWaris.saudaraLakiLakiSebapak
-                    //                         ? "Asobah bilghair"
-                    //                         : filteredAhliWaris.saudaraPerempuanSekandung
-                    //                             ? "1/6"
-                    //                             : undefined
-            )
-
-            // part: (() => {
-            //     if (filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki || filteredAhliWaris.bapak || filteredAhliWaris.saudaraLakiLakiSekandung) {
-            //         return null
-            //     } else if (filteredAhliWaris.anakPerempuan || filteredAhliWaris.cucuPerempuan) {
-            //         if (filteredAhliWaris.saudaraPerempuanSekandung) {
-            //             return null
-            //         } else if (filteredAhliWaris.saudaraLakiLakiSebapak) {
-            //             return "Asobah bilghair"
-            //         } else {
-            //             return "Asobah maalghair"
-            //         }
-            //     } else if (!filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak) {
-            //         return "Asobah bilghair"
-            //     } else if (!filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraPerempuanSebapak > 1) {
-            //         return "2/3"   
-            //     } else if (!filteredAhliWaris.saudaraPerempuanSekandung > 1) {
-            //         return "1/2"
-            //     } else if (filteredAhliWaris.saudaraPerempuanSekandung > 1 && filteredAhliWaris.saudaraLakiLakiSebapak) {
-            //         return "Asobah bilghair"
-            //     } else if (filteredAhliWaris.saudaraPerempuanSekandung > 1) {
-            //         return null
-            //     } else if (filteredAhliWaris.saudaraPerempuanSekandung && filteredAhliWaris.saudaraLakiLakiSebapak) {
-            //         return "Asobah bilghair"
-            //     } else if (filteredAhliWaris.saudaraPerempuanSekandung) {
-            //         return "1/6"
-            //     }
-            // }),
-
-                
+            )                
         }, 
         saudaraPerempuanSeibu: {
             number: filteredAhliWaris.saudaraPerempuanSeibu || null,
@@ -252,7 +232,7 @@ function law(filteredAhliWaris) {
             part: (
                     filteredAhliWaris.anakLakiLaki
                         ? null
-                        : filteredAhliWaris.anakPerempuan && filteredAhliWaris.cucuPerempuan
+                        : filteredAhliWaris.cucuPerempuan
                             ? "Asobah bilghair"
                             : "Asobah binafsi"
             )
@@ -262,17 +242,15 @@ function law(filteredAhliWaris) {
             part: (
                     filteredAhliWaris.anakLakiLaki
                         ? null
-                        : filteredAhliWaris.anakPerempuan > 1 && filteredAhliWaris.cucuLakiLaki
+                        : filteredAhliWaris.cucuLakiLaki
                             ? "Asobah bilghair"
                             : filteredAhliWaris.anakPerempuan > 1
                                 ? null
-                                : filteredAhliWaris.anakPerempuan && filteredAhliWaris.cucuLakiLaki
-                                    ? "Asobah bilghair"
-                                    : filteredAhliWaris.cucuLakiLaki
-                                        ? "Asobah bilghair"
-                                        : filteredAhliWaris.cucuPerempuan > 1
-                                            ? "2/3"
-                                            : "1/2"
+                                : filteredAhliWaris.anakPerempuan
+                                    ? "1/6"
+                                    : filteredAhliWaris.cucuPerempuan > 1
+                                        ? "2/3"
+                                        : "1/2"
             )
         },
         kakekDariJalurBapak: {
@@ -280,9 +258,15 @@ function law(filteredAhliWaris) {
             part: (
                 filteredAhliWaris.bapak
                     ? null
-                    : areThereDzawilFurudh(filteredAhliWaris)
-                        ? "1/6"
-                        : undefined ///
+                    : areThereSaudaraSekandungOrSebapak(filteredAhliWaris) && !areThereHeirExceptSaudaraSekandungOrSebapak(filteredAhliWaris)
+                        ? arePortionSaudaraSekandungAndSebapakMoreThanThree(filteredAhliWaris)
+                            ? "1/3"
+                            : "Muqosamah"
+                            // : "Asobah bilghair"
+                        : filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki 
+                            ? "1/6"
+                            : "Asobah binafsi"
+                        ///
             )
         }, 
         nenekDariJalurBapak: {
