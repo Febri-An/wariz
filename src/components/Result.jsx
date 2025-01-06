@@ -214,6 +214,11 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             </div>
             
             <div className="left-box">
+                <div className="information-box">
+                    <p>Ahli waris</p>
+                    <p>Bagian (Rp.)</p>
+                </div>
+
                 <div className="share-contain">
                     { sortedHeirShare.map(([key, { number, part }], index) => { 
                         return (
@@ -250,13 +255,21 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
 
             <div className="right-box">
                 <div className="line-boundary"></div>
+                <div className="information-box">
+                    <p>Bagian</p>
+                    <p>Porsi</p>
+                    <p>Anggota</p>
+                    <p>Ahli waris</p>
+                </div>
+                    
                 <div className="share-box">
                     { sortedHeirShare.map(([key, { number, part }], index) => {
                         // asobah
                         if (String(part).includes("Asobah") && !musytarikah) {
                             return (
                                 <div className="share-division">
-                                    <p>{asobahShare}/{asobahPortion} x {key.includes("LakiLaki") && part.includes("bilghair") ? number*2 : key.includes("Perempuan") && part.includes("bilghair") ? number*1 : 1} x {Math.floor(wealthPerShare)}</p>
+                                    <p>{asobahShare}/{asobahPortion}</p>
+                                    <p>{key.includes("LakiLaki") && part.includes("bilghair") ? number*2 : key.includes("Perempuan") && part.includes("bilghair") ? number*1 : 1} x {Math.floor(wealthPerShare)}</p>
                                     <p>{number}</p>
                                     <p>Rp. {Math.floor(asobahShare / asobahPortion * (key.includes("LakiLaki") && part.includes("bilghair") ? number*2 : key.includes("Perempuan") && part.includes("bilghair") ? number*1 : 1) * wealthPerShare / number)}</p>
                                 </div>
@@ -278,8 +291,8 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                         else if (String(part).includes("Muqosamah")) {
                             return (
                                 <div className="share-division">
-                                    <p>1/{muqosamahPortion} x {(key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ?  number*2 : number*1} x {Math.floor(wealthPerShare)}</p>
-                                    {/* <p>{part}</p> */}
+                                    <p>1/{muqosamahPortion}</p>
+                                    <p>{(key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ?  number*2 : number*1} x {Math.floor(wealthPerShare)}</p>
                                     <p>{number}</p>
                                     <p>Rp. {Math.floor(1 / muqosamahPortion * ((key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number*2 : number*1) * wealthPerShare / number)}</p>
                                 </div>
@@ -291,13 +304,16 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                                 {
                                     (key === "saudaraLakiLakiSeibu" || key === "saudaraPerempuanSeibu") && saudaraSeibuCasePart // is '1/3 together' shares for 'saudara seibu'
                                         ? ( <>
-                                                <p>{saudaraSeibuCasePart}/{saudaraSeibuCasePortion} x {number} x {Math.floor(wealthPerShare)}</p>
+                                                <p>{saudaraSeibuCasePart}/{saudaraSeibuCasePortion}</p>
+                                                <p>{number} x {Math.floor(wealthPerShare)}</p>
                                                 <p>{number}</p>
                                                 <p>Rp. {Math.floor(saudaraSeibuCasePart / saudaraSeibuCasePortion * number * wealthPerShare / number)}</p>
                                             </>
 
                                             )
                                         : ( <>
+                                                <p>-</p>
+                                                <p>-</p>
                                                 <p>{number}</p>
                                                 <p>Rp. {Math.floor((wealthPerShare * shareResult[index]) / number)}</p> 
                                             </> )

@@ -9,6 +9,15 @@
     width: 50%;
 }
 
+.left-box .information-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+.information-box p {
+  margin: 0 15px;
+}
+
 .left-box .share-contain {
     display: flex;
     flex-direction: column;
@@ -31,15 +40,28 @@
 
 
 .result-container .right-box {
-  display: flex;
-    width: 50%;
+  /* display: flex; */
+  position: relative;
+  width: 50%;
 }
 
 .right-box .line-boundary {
-  align-self: center;
+  position: absolute;
+  top: 50%;
   width: 2px;
   height: 90%;
   background-color: white;
+  transform: translate(-50%, -50%);
+}
+
+.right-box .information-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.information-box p {
+  margin: 0 15px;
 }
 
 .right-box .share-box {
@@ -57,7 +79,12 @@
 }
 
 .share-division p {
+  flex: 1;
   margin: 0;
+}
+
+.share-division p:last-child {
+  text-align: right;
 }
 
 
