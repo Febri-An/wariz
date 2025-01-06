@@ -24,7 +24,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
         if (isMuqosamah) {
             if (['saudaraLakiLakiSekandung', 'saudaraPerempuanSekandung'].some(condition => key === condition)) {
                 return [key, { ...item, part: 'Muqosamah' }]
-            } else if (['saudaraPerempuanSekandung', 'saudaraPerempuanSebapak'].some(condition => key === condition)) {
+            } else if (['saudaraLakiLakiSebapak', 'saudaraPerempuanSebapak'].some(condition => key === condition)) {
                 return [key, { ...item, part: 'Muqosamah' }]
             } else {
                 return [key, item]
