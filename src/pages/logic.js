@@ -258,15 +258,15 @@ function law(filteredAhliWaris) {
             part: (
                 filteredAhliWaris.bapak
                     ? null
-                    : areThereSaudaraSekandungOrSebapak(filteredAhliWaris) && !areThereHeirExceptSaudaraSekandungOrSebapak(filteredAhliWaris)
-                        ? arePortionSaudaraSekandungAndSebapakMoreThanThree(filteredAhliWaris)
-                            ? "1/3"
-                            : "Muqosamah"
-                            // : "Asobah bilghair"
+                    : areThereSaudaraSekandungOrSebapak(filteredAhliWaris)
+                        ? areThereHeirExceptSaudaraSekandungOrSebapak(filteredAhliWaris)
+                            ? 'Most shares'
+                            : arePortionSaudaraSekandungAndSebapakMoreThanThree(filteredAhliWaris)
+                                ? "1/3"
+                                : "Muqosamah"
                         : filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki 
                             ? "1/6"
                             : "Asobah binafsi"
-                        ///
             )
         }, 
         nenekDariJalurBapak: {
