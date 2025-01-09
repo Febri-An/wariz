@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import mostShareForKakek from './kakekMostShares'
 import '../styles/Result.css'
+import { use } from "react";
 
 function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
 
@@ -16,28 +18,64 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
 
     const [wealthPerShare, setWealthPerShare] = useState(0)
     
-    const [isMuqosamah, setIsMuqosamah] = useState(false)
+    // const [isMuqosamah, setIsMuqosamah] = useState(false)
+    const [muqosamahShare, setMuqosamahShare] = useState(0)
     const [muqosamahPortion, setMuqosamahPortion] = useState(0)
     const [muqosamahWithSaudaraPerempuan, setMuqosamahWithSaudaraPerempuan] = useState(false)
 
-    const transformedHeirShare = heirShare.map(([key, item]) => {
+    // const [rerender, setRerender] = useState(false)
+
+    // const frozenHeirShare = Object.freeze([...heirShare])
+    // const isMuqosamah = useReff(false)
+    // const [isThreeShareKakekCase, setIsThreeShareKakekCase] = useState(false)
+    // const previousSortedHeirShareRef = useRef([])
+
+    // const [changeHeirShare, setChangeHeirShare] = useState(false)
+
+    const transformedHeirShare = useMemo(() => {
+        console.log("heir share", heirShare)
+        const isMuqosamah = heirShare.some(([key, { number, part }]) => part === 'Muqosamah')
         if (isMuqosamah) {
-            if (['saudaraLakiLakiSekandung', 'saudaraPerempuanSekandung'].some(condition => key === condition)) {
-                return [key, { ...item, part: 'Muqosamah' }]
-            } else if (['saudaraLakiLakiSebapak', 'saudaraPerempuanSebapak'].some(condition => key === condition)) {
-                return [key, { ...item, part: 'Muqosamah' }]
-            } else {
-                return [key, item]
-            }
+            console.log('muqosamah case')
+            return heirShare.map(([key, item]) => {
+                if (['saudaraLakiLakiSekandung', 'saudaraPerempuanSekandung', 'saudaraLakiLakiSebapak', 'saudaraPerempuanSebapak'].some(condition => key === condition)) {
+                    return [key, { ...item, part: 'Muqosamah' }]
+                } else {
+                    return [key, item]
+                }
+            })
         }
-        return [key, item]
-    })
-        
-    const sortedHeirShare = [
+
+        const isThreeShareKakek = heirShare.some(([key, { number, part }]) => part === 'Most shares')
+        if (isThreeShareKakek) {
+            // setChangeHeirShare(true)
+            // setIsThreeShareKakekCase(true)
+            // setRerender(true)
+            // console.log(mostShareForKakek(heirShare, asalMasalah, shareList, asobahShare, asobahPortion))
+            console.log(heirShare, asalMasalah, shareList, asobahShare, asobahPortion)
+            console.log("~~~~~~~", mostShareForKakek(heirShare, asalMasalah, shareList, asobahShare, asobahPortion))
+            return mostShareForKakek(heirShare, asalMasalah, shareList, asobahShare, asobahPortion)
+        }
+        return heirShare
+    }, [heirShare, asalMasalah, shareList, asobahShare, asobahPortion])
+    // console.log(transformedHeirShare)
+    
+
+
+
+    const sortedHeirShare = useMemo(() => [
         ...transformedHeirShare.filter(([key, item]) => !item.part.startsWith('Asobah') && !item.part.startsWith('albaqi')),
         ...transformedHeirShare.filter(([key, item]) => item.part.startsWith('albaqi')),
         ...transformedHeirShare.filter(([key, item]) => item.part.startsWith('Asobah'))
-      ]
+    ], [transformedHeirShare])
+    // console.log("sorted heir share: ", sortedHeirShare)
+    // console.log("heir share: ", heirShare)
+    console.log("Before sorting:", transformedHeirShare);
+    console.log("After sorting:", sortedHeirShare);
+
+
+
+
 
     function fpb(a, b) {
         while (b !== 0) {
@@ -56,33 +94,33 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
         return numbers.reduce((acc, num) => kpk(acc, num));
     }
 
+    // set shareList and asalMasalah
     useEffect(() => {
-        const denominator = sortedHeirShare.map(([key, value]) => value.part)
-            .filter(item => /^[0-9]\/[0-9]$/.test(item)) // Memfilter hanya elemen yang berbentuk 'num/num'
-            .map(item => parseInt(item.split('/')[1])) // Mengambil penyebut (bagian setelah '/'))
-        
-        const deciamlFraction = sortedHeirShare.map(([key, value]) => {
-            if (/^[0-9]+\/[0-9]+$/.test(value.part)) { // convert decimal fraction 'num/num' -> float
-                return eval(value.part)
-            } else {
-                return value.part
-            }
-        })
-
-        const isMuqosamahCase = heirShare.some(([key, item]) => key === 'kakekDariJalurBapak' && item.part === 'Muqosamah')
-        if (isMuqosamahCase) {
-            const withSaudaraPerempuan = heirShare.some(([key, value]) => key.includes("saudaraPerempuan"))
-            setMuqosamahWithSaudaraPerempuan(withSaudaraPerempuan)
-            setIsMuqosamah(true)
-            setAsalMasalah(1)
-        } else {
-            console.log("heir share:", heirShare)
-            console.log(denominator.length === 0 ? 1 : kpkMultiple(denominator))
+        // if (JSON.stringify(previousSortedHeirShareRef.current) !== JSON.stringify(sortedHeirShare)) {
+            const denominator = sortedHeirShare.map(([key, value]) => value.part)
+                .filter(item => /^[0-9]\/[0-9]$/.test(item)) // filter only decimal fraction elements ('num/num')
+                .map(item => parseInt(item.split('/')[1])) // taking the denominator
             setAsalMasalah(denominator.length === 0 ? 1 : kpkMultiple(denominator))
+            
+            const deciamlFraction = sortedHeirShare.map(([key, value]) => {
+                console.log("Processing:", key, value);
+                if (/^[0-9]+\/[0-9]+$/.test(value.part)) { // convert decimal fraction string ('num/num') -> float
+                    // console.log("decimal fraction: ", value.part)
+                    return eval(value.part)
+                } else { // not a fractional number
+                    // console.log('decimal fraction: ', value.part)
+                    return value.part
+                }
+            })
+            console.log('print sortedHeirShare from []: ', sortedHeirShare)
+            // console.log('decimal fraction: ' + deciamlFraction)
             setShareList(deciamlFraction)
-        }
+            // previousSortedHeirShareRef.current = sortedHeirShare // Update ref
 
-    }, [])
+            console.log("sorted heir share: ", sortedHeirShare)
+            console.log("asal masalah: ", denominator.length === 0 ? 1 : kpkMultiple(denominator))
+        // }
+    }, [sortedHeirShare]) /// 
 
 
     useEffect(() => {
@@ -96,6 +134,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
         console.log("share result:" + shareResult)
     }, [shareList, shareResult])
 
+    // determine share of each heir
     useEffect(() => {
         let remaining = asalMasalah
         const results =  shareList
@@ -121,22 +160,20 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                     const albaqi = remaining / 3
                     remaining -= albaqi.toFixed(3)
                     return albaqi.toFixed(3)
-                // asobah
+                // asobah and muqosamah
                 } else {
                     if (remaining <= 0) {
                         remaining = 0
                     }
-                    if (isMuqosamah) {
-                        return null
-                    }
+                    setMuqosamahShare(remaining)
                     setAsobahShare(remaining)
                     return null
+                    
                 }})
-                .filter(value => value !== null)
-        setShareResult(results)
+            .filter(value => value !== null)
+        setShareResult(results) 
 
-        // console.log(wealthPerShare + "=" + totalWealth + " " + totalDept + " " + asalMasalah)
-
+        // set asobah bilghair portion
         const isAsobahBilghairExists = sortedHeirShare.some(([key, value]) => value.part.includes("bilghair"))
         if (isAsobahBilghairExists) {
             const portion = sortedHeirShare.reduce((total, [key, { number, part }]) => {
@@ -148,16 +185,27 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             setAsobahPortion(portion)
         }
 
+        // set muqosamah portion
+        const isMuqosamah = sortedHeirShare.some(([key, value]) => value.part.includes("Muqosamah"))
         if (isMuqosamah) {
+            console.log('setting muqosamah portion')
+            const withSaudaraPerempuan = sortedHeirShare.some(([key, value]) => key.includes("saudaraPerempuan"))
             const portion = sortedHeirShare.reduce((total, [key, { number, part }]) => {
                 if (part === "Muqosamah") {
-                  return total + ((key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number * 2 : number * 1);
+                  return total + ((key.includes("LakiLaki") || key.includes("kakek")) && withSaudaraPerempuan ? number * 2 : number * 1);
                 }
                 return total;
               }, 0);
+            setMuqosamahWithSaudaraPerempuan(withSaudaraPerempuan)
             setMuqosamahPortion(portion)
-        }        
-    }, [asalMasalah])
+        } 
+
+        // const isThreeShareCase = heirShare.some(([key, { number, part }]) => part === 'Most shares')
+        // if (isThreeShareCase) {
+        //     console.log('ThreeShareCase')
+        //     setIsThreeShareKakek(true)
+        // }
+    }, [asalMasalah, shareList, sortedHeirShare])  
 
     useEffect(() => {
         const shareResultSum = shareResult.reduce((acc, curr) => acc + curr, asobahShare)
@@ -185,7 +233,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             setSaudaraSeibuCasePortion(prevValue => prevValue += portion)
         }
 
-    }, [shareResult])
+    }, [shareResult, asobahShare, asalMasalah, musytarikah, saudaraSeibuCasePortion, sortedHeirShare, totalWealth, totalDept])
 
     return (
         
@@ -233,7 +281,9 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                                                 ? <p>Rp. {Math.floor(wealthPerShare * saudaraSeibuCasePart)} together</p>
                                                 : String(part).includes("Muqosamah")
                                                     ? <p>Muqosamah</p>
-                                                    : <p>Rp. {Math.floor(wealthPerShare * shareResult[index])}</p>
+                                                    // : Math.floor(wealthPerShare * shareResult[index])
+                                                        : <p>Rp. {Math.floor(wealthPerShare * shareResult[index])}</p>
+                                                        // : <p>{part}</p> 
                                     } 
                                     
                                 </div>
@@ -244,7 +294,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                                         : (key === "saudaraLakiLakiSeibu" || key === "saudaraPerempuanSeibu") && saudaraSeibuCasePart
                                             ? saudaraSeibuCasePart
                                             : String(part).includes("Muqosamah") 
-                                                ? 1
+                                                ? muqosamahShare
                                                 : shareResult[index] } bagian
                                 </p>
                             </div>
@@ -291,10 +341,10 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                         else if (String(part).includes("Muqosamah")) {
                             return (
                                 <div className="share-division">
-                                    <p>1/{muqosamahPortion}</p>
-                                    <p>{(key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ?  number*2 : number*1} x {Math.floor(wealthPerShare)}</p>
+                                    <p>{muqosamahShare}/{muqosamahPortion}</p>
+                                    <p>{(key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number*2 : number*1} x {Math.floor(wealthPerShare)}</p>
                                     <p>{number}</p>
-                                    <p>Rp. {Math.floor(1 / muqosamahPortion * ((key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number*2 : number*1) * wealthPerShare / number)}</p>
+                                    <p>Rp. {Math.floor(muqosamahShare / muqosamahPortion * ((key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number*2 : number*1) * wealthPerShare / number)}</p>
                                 </div>
                             )
                         }

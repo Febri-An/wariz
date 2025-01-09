@@ -98,17 +98,20 @@ function Form() {
 
     useEffect(() => {
             const result = logic(ahliWaris)
+            // console.log('logic re rendering')
+            // console.log('ahli waris: ', ahliWaris)
             // const heirToDisabled = Object.entries(result) // return [] -> general str
             //     .filter(([key, value]) => (!value.number && !value.part))
             //     .map(([key]) => fromCamelCase(key))
-
+            
             const heirWhoGetShare = Object.entries(result)
-                .filter(([key, value]) => (value.number && value.part)) 
-     
+            .filter(([key, value]) => (value.number && value.part)) 
+            
+            // console.log('~~~~~~~~~~~~~~~~~~~', heirWhoGetShare)
             setHeirShare(heirWhoGetShare)
-            console.log(result)
+            // console.log('setting heir share to: ', heirWhoGetShare)
 
-        console.log(ahliWaris)
+        // console.log(ahliWaris)
     }, [ahliWaris])
 
     // useEffect(() => {
