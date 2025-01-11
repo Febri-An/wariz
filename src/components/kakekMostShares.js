@@ -13,6 +13,7 @@ function kakekMostShares(heirShare, asalMasalah, shareList, asobahShare, asobahP
                     areThereSudaraPerempuan = true
                 }
                 return [key, { ...item, part}]
+                // return [key, item]
             }
             return [key, item]
         })

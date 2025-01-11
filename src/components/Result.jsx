@@ -28,15 +28,22 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
     // const frozenHeirShare = Object.freeze([...heirShare])
     // const isMuqosamah = useReff(false)
     // const [isThreeShareKakekCase, setIsThreeShareKakekCase] = useState(false)
-    // const previousSortedHeirShareRef = useRef([])
+    // const previousHeirShareRef = useRef([])
 
     // const [changeHeirShare, setChangeHeirShare] = useState(false)
+    // const [isMuqosamah, setIsMuqosamah] = useState(false)
+    // const [kakekSpecialCase, setKakekSpecialCase] = useState(false)
+
+    const [specialCasePortion, setSpecialCasePortion] = useState(0)
+    const [specialCasePart, setSpecialCasePart] = useState(0)
+
 
     const transformedHeirShare = useMemo(() => {
         console.log("heir share", heirShare)
         const isMuqosamah = heirShare.some(([key, { number, part }]) => part === 'Muqosamah')
         if (isMuqosamah) {
-            console.log('muqosamah case')
+            console.log('muqosamah case executed')
+            // setIsMuqosamah(true)
             return heirShare.map(([key, item]) => {
                 if (['saudaraLakiLakiSekandung', 'saudaraPerempuanSekandung', 'saudaraLakiLakiSebapak', 'saudaraPerempuanSebapak'].some(condition => key === condition)) {
                     return [key, { ...item, part: 'Muqosamah' }]
@@ -150,12 +157,27 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                         setSaudaraSeibuCasePortion(totalNumber)
                         setSaudaraSeibuCasePart(share)
                         return null
+                    // handle special case kakek 
+                    } else if (sortedHeirShare[index][0] === "kakekDariJalurBapak") {
+                        const isSpecialCase = ["suami", "ibu"].every(specialKey => heirShare.some(([key, value]) => key === specialKey)) && 
+                            (heirShare.some(([key]) => key === 'saudaraPerempuanSekandung' || key === 'saudaraPerempuanSebapak'))
+                        if (isSpecialCase) {
+                            const noOtherHeirs = ["suami", "ibu"].some(specialKey => !heirShare.some(([key, value]) => key === specialKey)) || 
+                                !heirShare.some(([key]) => key === 'saudaraPerempuanSekandung' || key === 'saudaraPerempuanSebapak');
+                            if (noOtherHeirs) {
+                                setSpecialCasePortion(3)
+                                setSpecialCasePart(4)
+                                return null
+                            }
+                        } 
+                        remaining -= share
+                        return share
                     // dzawil furudh
                     } else {
                         remaining -= share
                         return share
                     }
-                // albaqi for 'ibu'
+                // albaqi for 'ibu' or 'kakek (in most share calculation)'
                 } else if (String(value).includes("albaqi")) {
                     const albaqi = remaining / 3
                     remaining -= albaqi.toFixed(3)
@@ -207,6 +229,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
         // }
     }, [asalMasalah, shareList, sortedHeirShare])  
 
+    // set rod and aul
     useEffect(() => {
         const shareResultSum = shareResult.reduce((acc, curr) => acc + curr, asobahShare)
         if (shareResultSum && asalMasalah) {
@@ -224,6 +247,7 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
             }
         }
 
+        // musytarikah case handle
         if (!musytarikah && saudaraSeibuCasePortion) {
             const portion = sortedHeirShare
                 .filter(([key]) => key === "saudaraLakiLakiSekandung" || key === "saudaraPerempuanSekandung")
@@ -281,9 +305,9 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                                                 ? <p>Rp. {Math.floor(wealthPerShare * saudaraSeibuCasePart)} together</p>
                                                 : String(part).includes("Muqosamah")
                                                     ? <p>Muqosamah</p>
-                                                    // : Math.floor(wealthPerShare * shareResult[index])
+                                                    : (key === "kakekDariJalurBapak" || key === "saudaraPerempuanSekandung" || key === "saudaraPerempuanSebapak") && specialCasePart
+                                                        ? <p>Rp. {Math.floor(wealthPerShare * specialCasePart)} special case</p>
                                                         : <p>Rp. {Math.floor(wealthPerShare * shareResult[index])}</p>
-                                                        // : <p>{part}</p> 
                                     } 
                                     
                                 </div>
@@ -295,7 +319,9 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                                             ? saudaraSeibuCasePart
                                             : String(part).includes("Muqosamah") 
                                                 ? muqosamahShare
-                                                : shareResult[index] } bagian
+                                                : (key === "kakekDariJalurBapak" || key === "saudaraPerempuanSekandung" || key === "saudaraPerempuanSebapak") && specialCasePart
+                                                    ? specialCasePart
+                                                    : shareResult[index] } bagian
                                 </p>
                             </div>
                         )
@@ -345,6 +371,17 @@ function Result({ heirShare, totalWealth, totalDept, fromCamelCase }) {
                                     <p>{(key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number*2 : number*1} x {Math.floor(wealthPerShare)}</p>
                                     <p>{number}</p>
                                     <p>Rp. {Math.floor(muqosamahShare / muqosamahPortion * ((key.includes("LakiLaki") || key.includes("kakek")) && muqosamahWithSaudaraPerempuan ? number*2 : number*1) * wealthPerShare / number)}</p>
+                                </div>
+                            )
+                        }
+                        // special case kakek
+                        else if ((String(key).includes("kakek") || String(key).includes("saudaraPerempuan")) && specialCasePart) {
+                            return (
+                                <div className="share-division">
+                                    <p>{specialCasePart}/{specialCasePortion}</p>
+                                    <p>{key.includes("kakek") ? number*2 : number*1} x {Math.floor(wealthPerShare)}</p>
+                                    <p>{number}</p>
+                                    <p>Rp. {Math.floor(specialCasePart / specialCasePortion * (key.includes("kakek") ? number*2 : number*1) * wealthPerShare / number)}</p>
                                 </div>
                             )
                         }

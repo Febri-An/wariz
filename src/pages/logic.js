@@ -77,6 +77,12 @@ function law(filteredAhliWaris) {
         return heirArray.some(key => data[key])
     }
 
+    function kakekSpecialCase(data) {
+        const heirArray = ["suami", "ibu"]
+
+        return heirArray.every(key => data[key]) && (data['saudaraPerempuanSekandung'] || data['saudaraPerempuanSebapak'])
+    }
+
     const result = {
         bapak: {
             number: filteredAhliWaris.bapak || null,
@@ -258,15 +264,17 @@ function law(filteredAhliWaris) {
             part: (
                 filteredAhliWaris.bapak
                     ? null
-                    : areThereSaudaraSekandungOrSebapak(filteredAhliWaris)
-                        ? areThereHeirExceptSaudaraSekandungOrSebapak(filteredAhliWaris)
-                            ? 'Most shares'
-                            : arePortionSaudaraSekandungAndSebapakMoreThanThree(filteredAhliWaris)
-                                ? "1/3"
-                                : "Muqosamah"
-                        : filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki 
-                            ? "1/6"
-                            : "Asobah binafsi"
+                    // : kakekSpecialCase(filteredAhliWaris)
+                    //     ? "Special case"
+                        : areThereSaudaraSekandungOrSebapak(filteredAhliWaris)
+                            ? areThereHeirExceptSaudaraSekandungOrSebapak(filteredAhliWaris)
+                                ? 'Most shares'
+                                : arePortionSaudaraSekandungAndSebapakMoreThanThree(filteredAhliWaris)
+                                    ? "1/3"
+                                    : "Muqosamah"
+                            : filteredAhliWaris.anakLakiLaki || filteredAhliWaris.cucuLakiLaki 
+                                ? "1/6"
+                                : "Asobah binafsi"
             )
         }, 
         nenekDariJalurBapak: {
