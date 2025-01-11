@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# Wariz - Friendly Website for Wealth Distribution
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to **Wariz**, a web-based tool designed to help users calculate and distribute inheritance shares in accordance with Islamic inheritance laws (*Faraid*). The platform is built to be user-friendly, providing a smooth and reliable experience for anyone seeking clarity in wealth distribution.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
+- **Accurate Calculations**: Implements Islamic principles of inheritance to calculate shares for heirs.
+<!-- - **Responsive Design**: Optimized for both desktop and mobile users. -->
+- **Simple Interface**: Focused on usability and clarity for all users.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Accessing Wariz
+You can access the website directly at:
+[https://Febri-An.github.io/wariz/](https://Febri-An.github.io/wariz/)
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How to Use
+1. Open the website.
+2. Input details about the deceased's estate and heirs (e.g., number of children, spouse, parents, etc.).
+3. Click on **Next** to go to the next tab and see the results of inheritance distribution.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Development Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+If you'd like to contribute or customize the website locally, follow these steps:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
+- **Git**: [Install Git](https://git-scm.com/)
+- **Node.js** (Optional): [Install Node.js](https://nodejs.org/)
+- Basic knowledge of HTML, CSS, and JavaScript.
 
-### `npm run eject`
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Febri-An/wariz.git
+   ```
+2. Navigate to the project folder:
+   ```bash
+   cd wariz
+   ```
+3. Open `index.html` in your browser to view the website locally.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Technologies Used
+- **HTML5**: For content structure.
+- **CSS3**: For styling and responsiveness.
+- **JavaScript**: For dynamic calculations and interactivity.
+- **React**: For web framework.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Contributing
+We welcome contributions from the community! If you'd like to help improve Wariz, please:
+1. Fork the repository.
+2. Make your changes.
+3. Submit a pull request with a description of your changes.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## License
+This project is licensed under the **MIT License**. Feel free to use and adapt it for your needs.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Contact
+For questions or feedback, please reach out at:
+[https://github.com/Febri-An](https://github.com/Febri-An)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Thank you for using **Wariz**! We hope it helps simplify the process of wealth distribution.
